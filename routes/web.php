@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('/getToken', [SpotifyController::class, 'getToken']) -> name('getToken');
 Route::get('/getArtist/{idArtist}', [SpotifyController::class, 'getArtist']) -> name('getArtist');
+Route::get('/getTrack/{idTrack}', [SpotifyController::class, 'getTrack']) -> name('getTrack');

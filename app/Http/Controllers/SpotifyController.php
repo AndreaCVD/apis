@@ -60,7 +60,7 @@ class SpotifyController extends Controller
             ]);
 
         } catch (RequestException $exception) {
-            //si salgo un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
 
             $this->getToken();
 
@@ -81,5 +81,42 @@ class SpotifyController extends Controller
     }
 
 
+    //endpoint para obtener una cancion segun el id que se envia por la ruta
+    public function getTrack($idTrack){
+
+        $client = new Client();
+
+        //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
+        //volver a generarlo
+
+        try {
+            
+            $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
+                "headers" => [
+                    "Authorization" => "Bearer ".$this->accessToken,
+                ]
+    
+            ]);
+
+        } catch (RequestException $exception) {
+            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+
+            $this->getToken();
+
+            $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
+                "headers" => [
+                    "Authorization" => "Bearer ".$this->accessToken,
+                ]
+    
+            ]);
+
+        }
+
+        //recogemos el resultado de la peticion y lo pasamos como json
+        $result = json_decode($response->getBody());
+
+        return $result;
+
+    }
 
 }
