@@ -119,4 +119,42 @@ class SpotifyController extends Controller
 
     }
 
+    //endpoint para obtener una cancion segun el id que se envia por la ruta
+    public function getAlbum($idAlbum){
+
+        $client = new Client();
+
+        //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
+        //volver a generarlo
+
+        try {
+            
+            $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
+                "headers" => [
+                    "Authorization" => "Bearer ".$this->accessToken,
+                ]
+    
+            ]);
+
+        } catch (RequestException $exception) {
+            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+
+            $this->getToken();
+
+            $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
+                "headers" => [
+                    "Authorization" => "Bearer ".$this->accessToken,
+                ]
+    
+            ]);
+
+        }
+
+        //recogemos el resultado de la peticion y lo pasamos como json
+        $result = json_decode($response->getBody());
+
+        return $result;
+
+    }
+
 }
