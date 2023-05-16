@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
+use Exception;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
 
 class SpotifyController extends Controller
 {
@@ -42,119 +46,173 @@ class SpotifyController extends Controller
         
     }
 
+
+    public function auth_token($token){
+
+        // Decodificar token JWT y validar firma
+        try {
+
+            $payload = JWT::decode($token, new Key(env('JWT_SECRET'),'HS512'));
+
+            return true;
+
+        } catch (Exception $e) {
+            
+            return false;
+        }
+        
+    }
+
     //endpoint para obtener la informacion de un artista segun el id que se envia por la ruta
-    public function getArtist($idArtist){
+    public function getArtist($idArtist, Request $request){
 
         $client = new Client();
 
-        //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
-        //volver a generarlo
 
-        try {
-            
-            $response = $client->request("GET", "https://api.spotify.com/v1/artists/$idArtist", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        // Obtener token JWT del encabezado de autorización
+        $token = $request->bearerToken();
 
-        } catch (RequestException $exception) {
-            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+        $auth = $this->auth_token($token);
 
-            $this->getToken();
 
-            $response = $client->request("GET", "https://api.spotify.com/v1/artists/$idArtist", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        if ($auth) {
+            //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
+            //volver a generarlo
 
-        }
+            try {
 
-        //recogemos el resultado de la peticion y lo pasamos como json
-        $result = json_decode($response->getBody());
+                $response = $client->request("GET", "https://api.spotify.com/v1/artists/$idArtist", [
+                    "headers" => [
+                        "Authorization" => "Bearer " . $this->accessToken,
+                    ]
 
-        return $result;
+                ]);
+            } catch (RequestException $exception) {
+                //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+
+                $this->getToken();
+
+                $response = $client->request("GET", "https://api.spotify.com/v1/artists/$idArtist", [
+                    "headers" => [
+                        "Authorization" => "Bearer " . $this->accessToken,
+                    ]
+
+                ]);
+            }
+
+            //recogemos el resultado de la peticion y lo pasamos como json
+            $result = json_decode($response->getBody());
+
+            return $result;
+
+        } else {
+
+            return "Token invalido";
+        }     
+
 
     }
 
 
     //endpoint para obtener una cancion segun el id que se envia por la ruta
-    public function getTrack($idTrack){
+    public function getTrack($idTrack, Request $request){
 
         $client = new Client();
 
-        //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
-        //volver a generarlo
 
-        try {
-            
-            $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        // Obtener token JWT del encabezado de autorización
+        $token = $request->bearerToken();
 
-        } catch (RequestException $exception) {
-            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+        $auth = $this->auth_token($token);
 
-            $this->getToken();
 
-            $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        if ($auth) {
 
-        }
+            //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
+            //volver a generarlo
 
-        //recogemos el resultado de la peticion y lo pasamos como json
-        $result = json_decode($response->getBody());
+            try {
+                
+                $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
+                    "headers" => [
+                        "Authorization" => "Bearer ".$this->accessToken,
+                    ]
+        
+                ]);
 
-        return $result;
+            } catch (RequestException $exception) {
+                //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+
+                $this->getToken();
+
+                $response = $client->request("GET", "https://api.spotify.com/v1/tracks/$idTrack", [
+                    "headers" => [
+                        "Authorization" => "Bearer ".$this->accessToken,
+                    ]
+        
+                ]);
+
+            }
+
+            //recogemos el resultado de la peticion y lo pasamos como json
+            $result = json_decode($response->getBody());
+
+            return $result;
+        } else {
+
+            return "Token invalido";
+        }   
 
     }
 
     //endpoint para obtener una cancion segun el id que se envia por la ruta
-    public function getAlbum($idAlbum){
+    public function getAlbum($idAlbum, Request $request){
 
         $client = new Client();
 
-        //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
-        //volver a generarlo
 
-        try {
-            
-            $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        // Obtener token JWT del encabezado de autorización
+        $token = $request->bearerToken();
 
-        } catch (RequestException $exception) {
-            //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
+        $auth = $this->auth_token($token);
 
-            $this->getToken();
 
-            $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
-                "headers" => [
-                    "Authorization" => "Bearer ".$this->accessToken,
-                ]
-    
-            ]);
+        if ($auth) {
 
-        }
+            //como el token de spotify caduca a la hora, tendremos que hacer comprobar si aun es valido, y si no
+            //volver a generarlo
 
-        //recogemos el resultado de la peticion y lo pasamos como json
-        $result = json_decode($response->getBody());
+            try {
+                
+                $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
+                    "headers" => [
+                        "Authorization" => "Bearer ".$this->accessToken,
+                    ]
+        
+                ]);
 
-        return $result;
+            } catch (RequestException $exception) {
+                //si salta un error por el token, lo volvemos a generar y lanzamos la peticion otra vez
 
+                $this->getToken();
+
+                $response = $client->request("GET", "https://api.spotify.com/v1/albums/$idAlbum", [
+                    "headers" => [
+                        "Authorization" => "Bearer ".$this->accessToken,
+                    ]
+        
+                ]);
+
+            }
+
+            //recogemos el resultado de la peticion y lo pasamos como json
+            $result = json_decode($response->getBody());
+
+            return $result;
+
+        } else {
+
+            return "Token invalido";
+        }  
     }
-
 }
