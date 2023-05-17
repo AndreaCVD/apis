@@ -18,7 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/getToken', [SpotifyController::class, 'getToken']) -> name('getToken');
-Route::get('/getArtist/{idArtist}', [SpotifyController::class, 'getArtist']) -> name('getArtist');
-Route::get('/getTrack/{idTrack}', [SpotifyController::class, 'getTrack']) -> name('getTrack');
-Route::get('/getAlbum/{idAlbum}', [SpotifyController::class, 'getAlbum']) -> name('getAlbum');
+
+
+Route::get('/getToken', [SpotifyController::class, 'getToken']);
+Route::get('/getArtist/{idArtist}', [SpotifyController::class, 'getArtist']);
+Route::get('/getTrack/{idTrack}', [SpotifyController::class, 'getTrack']);
+Route::get('/getAlbum/{idAlbum}', [SpotifyController::class, 'getAlbum']);
