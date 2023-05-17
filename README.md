@@ -2,6 +2,7 @@
 + SPOTIFY_CLIENT_ID=""
 + SPOTIFY_CLIENT_SECRET=""
 + SPOTIFY_ACCESS_TOKEN=""
++ JWT_SECRET=
 
 ## spotify:
 ejemplos de id:
