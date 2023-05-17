@@ -3,6 +3,7 @@
 + SPOTIFY_CLIENT_SECRET=""
 + SPOTIFY_ACCESS_TOKEN=""
 + JWT_SECRET=
++ MUSIXMATCH_API_KEY=""
 
 ## spotify:
 ejemplos de id:
