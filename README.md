@@ -5,12 +5,6 @@
 + JWT_SECRET=
 + MUSIXMATCH_API_KEY=""
 
-## spotify:
-ejemplos de id:
-+ artist_id -> 63yrD80RY3RNEM2YDpUpO8
-+ track_id -> 6wmKvtSmyTqHNo44OBXVN1
-+ album_id -> 6lbrHERXve89hrxuCpsJOg
-
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
