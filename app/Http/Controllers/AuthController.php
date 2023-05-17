@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Validator;
@@ -70,22 +72,24 @@ class AuthController extends Controller
 
     }
 
-    public function logout(){
+    public function logout(Request $request){
 
-        //Cambio el token y no se lo devuelvo al usuario, de esta forma invalido el token anterior y si el usuario quiere hacer alguna peticion
-        // deberá iniciar sesion de nuevo      
 
-        $payload = [
-            'sub' => 0,
-            'name' => "unknow",
-            'email' => "unknow",
-            'iat' => time(),
-            'exp' => time() + (60 * 120) // Token expira en 2 horas
-        ];
+        $token = $request->bearerToken();
 
-        $token = JWT::encode($payload, env('JWT_SECRET'), 'HS512');
+        try {
 
-        return response()->json(['token' => $token]);
+            $payload = JWT::decode($token, new Key(env('JWT_SECRET'),'HS512'));
+
+            $payload->exp = 0;
+
+            return "revoked token";
+
+        } catch (Exception $e) {
+            
+            return "incorrect token";
+        }
+
 
     }
 
