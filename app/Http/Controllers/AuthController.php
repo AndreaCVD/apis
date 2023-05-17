@@ -54,13 +54,13 @@ class AuthController extends Controller
                     'iat' => time(),
                     'exp' => time() + (60 * 120) // Token expira en 2 horas
                 ];
-                $token = JWT::encode($payload, env('JWT_SECRET','123'), 'HS512');
 
-                $user->remember_token = $token;
-                $user->save();
+                $token = JWT::encode($payload, env('JWT_SECRET'), 'HS512');
+
+                // $user->remember_token = $token;
+                // $user->save();
 
                 // Devolvemos el token JWT al cliente
-
                 return response()->json(['token' => $token]);
             }            
         }
@@ -72,14 +72,28 @@ class AuthController extends Controller
 
     public function logout(){
 
+        //Cambio el token y no se lo devuelvo al usuario, de esta forma invalido el token anterior y si el usuario quiere hacer alguna peticion
+        // deberá iniciar sesion de nuevo      
+
+        $payload = [
+            'sub' => 0,
+            'name' => "unknow",
+            'email' => "unknow",
+            'iat' => time(),
+            'exp' => time() + (60 * 120) // Token expira en 2 horas
+        ];
+
+        $token = JWT::encode($payload, env('JWT_SECRET'), 'HS512');
+
+        return response()->json(['token' => $token]);
+
     }
 
 
-
 //     Signin – Registro del usuario. Insertará el usuario 
-// en la BBDD.
-//  Login - Validará el token y lo emitirá al usuario.
-// o Extra: Permitir que el usuario pueda loguearse 
-// a través de OAuth2.0 con Laravel/Socialite.
-//  Logout – Revocará el token al usuario
+//     en la BBDD.
+//      Login - Validará el token y lo emitirá al usuario.
+//     o Extra: Permitir que el usuario pueda loguearse 
+//     a través de OAuth2.0 con Laravel/Socialite.
+//      Logout – Revocará el token al usuario
 }
