@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-
+    private $isTokenValid = false;
     public function signin(Request $request){
 
         Validator::make($request->all(), [
@@ -58,7 +58,6 @@ class AuthController extends Controller
                 ];
 
                 $token = JWT::encode($payload, env('JWT_SECRET'), 'HS512');
-
                 // $user->remember_token = $token;
                 // $user->save();
 
@@ -82,6 +81,8 @@ class AuthController extends Controller
             $payload = JWT::decode($token, new Key(env('JWT_SECRET'),'HS512'));
 
             $payload->exp = 0;
+
+            // $newtoken = JWT::encode($payload, env('JWT_SECRET'), 'HS512');
 
             return "revoked token";
 

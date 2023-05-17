@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MusixmatchController;
 use App\Http\Controllers\SpotifyController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,7 @@ Route::get('/getToken', [SpotifyController::class, 'getToken']);
 Route::get('/getArtist/{idArtist}', [SpotifyController::class, 'getArtist']);
 Route::get('/getTrack/{idTrack}', [SpotifyController::class, 'getTrack']);
 Route::get('/getAlbum/{idAlbum}', [SpotifyController::class, 'getAlbum']);
+
+Route::get('/getChartArtist', [MusixmatchController::class, 'getChartArtist']);
+Route::get('/getTracksArtist', [MusixmatchController::class, 'getTracksArtist']);
+Route::get('/getGenresArtist', [MusixmatchController::class, 'getGenresArtist']);
